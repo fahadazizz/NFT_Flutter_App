@@ -1,4 +1,5 @@
 import 'package:first_project/components/bid_place_button.dart';
+import 'package:first_project/view/home/nft_full_show_page.dart';
 import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable
@@ -304,7 +305,19 @@ class _NftDesignState extends State<NftDesign> {
             ),
             backgroundColor: Colors.transparent,
           ),
-          onPressed: widget.onPress,
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => NftFullShowPage(
+                    nftImage: widget.nftImage,
+                    title: widget.titles,
+                    logo: widget.logo,
+                    userName: widget.userName,
+                    passion: widget.passion),
+              ),
+            );
+          },
           child: Text(
             '$text',
             style: TextStyle(
