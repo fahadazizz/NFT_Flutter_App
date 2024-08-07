@@ -1,27 +1,30 @@
 import 'package:first_project/components/bid_place_button.dart';
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class NftDesign extends StatefulWidget {
   String? nftImage;
   String? titles;
   String? logo;
   String? userName;
   String? passion;
-  double? minimumBid;
+  VoidCallback? onPress;
 
-  NftDesign(
-      {required this.nftImage,
-      required this.titles,
-      required this.logo,
-      required this.userName,
-      required this.passion,
-      required this.minimumBid});
+  NftDesign({
+    required this.nftImage,
+    required this.titles,
+    required this.logo,
+    required this.userName,
+    required this.passion,
+    required this.onPress,
+  });
 
   @override
   State<NftDesign> createState() => _NftDesignState();
 }
 
 class _NftDesignState extends State<NftDesign> {
+  double minimumBid = 0.6;
   bool _visible = true;
   final bidController = TextEditingController();
   double? bid;
@@ -111,7 +114,7 @@ class _NftDesignState extends State<NftDesign> {
               ),
             ),
             Text(
-              '${widget.minimumBid}',
+              '${minimumBid}',
               style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 16,
@@ -121,39 +124,31 @@ class _NftDesignState extends State<NftDesign> {
         ),
 
         // bid placer button
-        BidPlaceButton(
-            visible: _visible,
-            text: 'Place Bid',
-            onPress: () {
-              showModalBottomSheet(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return _bottomSheet();
-                  });
-            }),
-
-        // artwork view button
-        SizedBox(
-          width: MediaQuery.of(context).size.width * 0.88,
-          height: 55,
-          child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                  side: BorderSide(color: Colors.blue),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                backgroundColor: Colors.transparent,
-              ),
-              onPressed: () {},
-              child: const Text(
-                'View Artwork',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Color(0XFFFCFCFC),
-                  fontWeight: FontWeight.w500,
-                ),
-              )),
+        Stack(
+          children: [
+            BidPlaceButton(
+                visible: _visible,
+                text: 'Place Bid',
+                onPress: () {
+                  showModalBottomSheet(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return _bottomSheet();
+                      });
+                }),
+            Visibility(
+              visible: !_visible,
+              child: _viewArtNetwork('Bid Placed already at $bid'),
+            ),
+          ],
         ),
+
+        // spacer
+        const SizedBox(
+          height: 10,
+        ),
+        // artwork view button
+        _viewArtNetwork('View Artwork'),
         // for lower spacing
         const SizedBox(
           height: 20,
@@ -169,11 +164,12 @@ class _NftDesignState extends State<NftDesign> {
         children: [
           ListTile(
             title: const Text('Place a bid'),
-            subtitle: Text('You must bid at least ${widget.minimumBid}'),
+            subtitle: Text('You must bid at least ${minimumBid}'),
             trailing: IconButton(
                 onPressed: () {
                   Navigator.pop(context);
                   bidController.clear();
+                  bid = 0.0;
                 },
                 icon: const Icon(Icons.cancel_outlined)),
           ),
@@ -200,7 +196,40 @@ class _NftDesignState extends State<NftDesign> {
             ),
           ),
           _bidPriceShow(),
-          BidPlaceButton(visible: false, text: 'Confirm', onPress: () {}),
+          BidPlaceButton(
+              visible: true,
+              text: 'Confirm',
+              onPress: () {
+                setState(() {
+                  _visible = false;
+                  Navigator.pop(context);
+                });
+              }),
+          SizedBox(
+            width: MediaQuery.of(context).size.width * 0.88,
+            height: 55,
+            child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    side: BorderSide(color: Colors.blue),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  backgroundColor: Colors.transparent,
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                  bidController.clear();
+                  bid = 0.0;
+                },
+                child: const Text(
+                  'Cancel Bid',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Color(0XFFFCFCFC),
+                    fontWeight: FontWeight.w500,
+                  ),
+                )),
+          ),
         ],
       ),
     );
@@ -209,7 +238,9 @@ class _NftDesignState extends State<NftDesign> {
   // bid price in bottom sheet
   Widget _bidPriceShow() {
     const double serviceFee = 0.15;
-    final double totalBid = serviceFee + bid!;
+    final double bidValue =
+        bid ?? 0.0; // Provide a default value if bid is null
+    final double totalBid = serviceFee + bidValue;
     return Container(
       height: 120,
       margin: const EdgeInsets.only(left: 40, right: 40, top: 20),
@@ -229,13 +260,13 @@ class _NftDesignState extends State<NftDesign> {
               ),
             ],
           ),
-          Row(
+          const Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text('Service fee: '),
+              Text('Service fee: '),
               Text(
                 '$serviceFee',
-                style: const TextStyle(
+                style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
                 ),
@@ -257,6 +288,31 @@ class _NftDesignState extends State<NftDesign> {
           ),
         ],
       ),
+    );
+  }
+
+  // art network view
+  Widget _viewArtNetwork(String text) {
+    return SizedBox(
+      width: MediaQuery.of(context).size.width * 0.88,
+      height: 55,
+      child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            shape: RoundedRectangleBorder(
+              side: BorderSide(color: Colors.blue),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            backgroundColor: Colors.transparent,
+          ),
+          onPressed: widget.onPress,
+          child: Text(
+            '$text',
+            style: TextStyle(
+              fontSize: 16,
+              color: Color(0XFFFCFCFC),
+              fontWeight: FontWeight.w500,
+            ),
+          )),
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class BidPlaceButton extends StatelessWidget {
   bool visible;
   VoidCallback onPress;
@@ -12,7 +13,7 @@ class BidPlaceButton extends StatelessWidget {
     return Visibility(
       visible: visible,
       child: Container(
-        margin: const EdgeInsets.only(top: 15, bottom: 10),
+        margin: const EdgeInsets.only(top: 20, bottom: 5),
         width: MediaQuery.of(context).size.width * 0.88,
         height: 55,
         decoration: BoxDecoration(
