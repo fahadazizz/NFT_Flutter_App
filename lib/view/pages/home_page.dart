@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:first_project/models/nft_model.dart';
 import 'package:first_project/view/home/appBar_homePage.dart';
 import 'package:first_project/view/home/homeDrawer_page.dart';
+import 'package:first_project/view/home/nft_design.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -73,187 +74,16 @@ class HomePage extends StatelessWidget {
               ),
             ),
           ),
-
-          // first item of nft
           SliverToBoxAdapter(
-            child: Column(
-              children: [
-                Container(
-                  margin: EdgeInsets.only(left: 15, right: 15, top: 8),
-                  padding: EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: Color(0XFF333333).withOpacity(0.6),
-                    borderRadius: BorderRadius.circular(32),
-                  ),
-                  width: 330,
-                  height: 530,
-                  child: Column(
-                    children: [
-                      // main image
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(20),
-                        child: Image.asset(
-                          'assets/images/itachi1.jpg',
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-
-                      // spacer
-                      const SizedBox(
-                        height: 15,
-                      ),
-
-                      // detail
-                      const Align(
-                        alignment: Alignment.bottomLeft,
-                        child: Text(
-                          'Uchiha Killer...',
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Color(0XFFFCFCFC),
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-
-                      // user show
-                      ListTile(
-                        leading: const CircleAvatar(
-                          backgroundImage:
-                              AssetImage('assets/images/image1.png'),
-                        ),
-                        title: const Text(
-                          'Pawel Chizi',
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Color(0XFFFCFCFC),
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        subtitle: const Text(
-                          'Creator',
-                          style: TextStyle(
-                            fontSize: 13,
-                            color: Color(0XFFFCFCFC),
-                            fontWeight: FontWeight.w300,
-                          ),
-                        ),
-                        trailing: IconButton(
-                            onPressed: () {},
-                            icon: Icon(Icons.favorite_border)),
-                      ),
-                    ],
-                  ),
-                ),
-
-                // spacer
-                const SizedBox(
-                  height: 10,
-                ),
-
-                // minimum price bid
-                const Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Minimum Bid: ',
-                      style: TextStyle(
-                        fontSize: 14,
-                      ),
-                    ),
-                    Text(
-                      '1.50 ETH',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
-                    ),
-                  ],
-                ),
-
-                // bid placer button
-                Container(
-                  margin: const EdgeInsets.only(top: 15, bottom: 10),
-                  width: MediaQuery.of(context).size.width * 0.88,
-                  height: 55,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    gradient: const LinearGradient(
-                      colors: [
-                        Colors.blueAccent,
-                        Colors.purple,
-                      ],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
-                  ),
-                  child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8)),
-                        backgroundColor: Colors.transparent,
-                      ),
-                      onPressed: () {
-                        showModalBottomSheet(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return Container(
-                                child: Column(
-                                  children: [
-                                    ListTile(
-                                      title: const Text('Place a bid'),
-                                      subtitle: const Text(
-                                          'You must bid at least 0.825 ETH'),
-                                      trailing: IconButton(
-                                          onPressed: () {},
-                                          icon: Icon(Icons.cancel_outlined)),
-                                    ),
-                                    Text('Your Bid'),
-                                  ],
-                                ),
-                              );
-                            });
-                      },
-                      child: const Text(
-                        'Place Bid',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Color(0XFFFCFCFC),
-                          fontWeight: FontWeight.w500,
-                        ),
-                      )),
-                ),
-
-                // artwork view button
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.88,
-                  height: 55,
-                  child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          side: BorderSide(color: Colors.blue),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        backgroundColor: Colors.transparent,
-                      ),
-                      onPressed: () {},
-                      child: const Text(
-                        'View Artwork',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Color(0XFFFCFCFC),
-                          fontWeight: FontWeight.w500,
-                        ),
-                      )),
-                ),
-                // for lower spacing
-                const SizedBox(
-                  height: 20,
-                ),
-              ],
+            child: NftDesign(
+              nftImage: 'assets/images/itachi1.jpg',
+              titles: 'Itachi Uchiha',
+              logo: 'assets/images/image1.png',
+              userName: 'Sam karan',
+              passion: 'Creator',
+              minimumBid: 0.6,
             ),
           ),
-
           // NFT items list
           SliverList(
             delegate: SliverChildBuilderDelegate(
